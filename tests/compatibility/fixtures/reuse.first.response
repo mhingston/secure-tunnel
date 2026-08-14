@@ -1,0 +1,6 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Compatibility-Fixture: reuse-first-v1
+
+{"data":[{"id":"gpt-5-codex"}]}
+

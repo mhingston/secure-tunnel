@@ -1,0 +1,19 @@
+event: response.output_text.delta
+data: {"delta":"first deliberately flushed event"}
+
+event: response.output_text.delta
+data: {"delta":"second deliberately flushed event"}
+
+event: response.output_text.delta
+data: {"delta":"third deliberately flushed event"}
+
+event: response.output_text.delta
+data: {"delta":"fourth deliberately flushed event"}
+
+event: response.output_text.delta
+data: {"delta":"fifth deliberately flushed event"}
+
+event: response.completed
+data: {"type":"response.completed"}
+
+

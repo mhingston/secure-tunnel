@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+Cache-Control: no-cache
+X-Compatibility-Fixture: long-sse-v1
+
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_long_fixture"}}
+
+

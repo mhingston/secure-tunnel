@@ -1,0 +1,20 @@
+[package]
+name = "codex-tunnel-integration"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[[test]]
+name = "security_integration"
+path = "security_integration.rs"
+
+[dev-dependencies]
+base64.workspace = true
+codex-tunnel = { path = "../../crates/codex-tunnel" }
+rcgen = "=0.12.1"
+rustls.workspace = true
+rustls-pemfile.workspace = true
+tokio.workspace = true
+tokio-rustls.workspace = true

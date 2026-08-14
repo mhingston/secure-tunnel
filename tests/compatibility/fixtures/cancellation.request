@@ -1,0 +1,6 @@
+POST /v1/responses HTTP/1.1
+Host: compat.local
+X-Compatibility-Fixture: cancellation-v1
+
+{"input":"client cancellation fixture"}
+

@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 122
+X-Compatibility-Fixture: models-v1
+
+{"object":"list","data":[{"id":"gpt-5-codex","object":"model"},{"id":"gpt-5-codex-mini","object":"model"}]}
+

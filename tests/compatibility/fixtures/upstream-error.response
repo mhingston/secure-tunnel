@@ -1,0 +1,6 @@
+HTTP/1.1 502 Bad Gateway
+Content-Type: application/json
+X-Compatibility-Fixture: upstream-error-v1
+
+{"error":{"type":"upstream_error","message":"opaque fixture upstream failure"}}
+

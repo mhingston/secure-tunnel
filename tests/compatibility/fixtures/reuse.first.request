@@ -1,0 +1,5 @@
+GET /v1/models HTTP/1.1
+Host: compat.local
+X-Compatibility-Fixture: reuse-first-v1
+
+

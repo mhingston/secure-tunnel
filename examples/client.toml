@@ -1,0 +1,33 @@
+# Template only. Replace every REPLACE_WITH_* value before deployment.
+# The client listener is intentionally loopback-only; Codex points its custom
+# Responses provider at http://127.0.0.1:18787/v1.
+
+[listen]
+address = "127.0.0.1:18787"
+
+[remote]
+address = "REPLACE_WITH_REMOTE_HOST:8443"
+
+# Optional TLS 1.3 defence in depth. Noise IK remains the confidentiality and
+# peer-identity boundary even when an enterprise CA can intercept this TLS.
+[outer_tls]
+enabled = false
+# server_name = "codex-tunnel.internal"
+# Test harnesses only: append an interception CA without disabling system-root validation.
+# additional_ca_file = "/protected/test-ca.pem"
+
+[identity]
+private_key_file = "/Users/REPLACE_WITH_LOCAL_USERNAME/Library/Application Support/NetworkSync/client.key"
+
+[peer]
+# Provision this server public identity out of band. Never use TOFU.
+server_public_key = "<REPLACE_WITH_BASE64_SERVER_PUBLIC_KEY>"
+
+[timeouts]
+connect_seconds = 10
+handshake_seconds = 10
+idle_seconds = 600
+
+[limits]
+# Bound locally accepted Codex connections before they consume outbound work.
+max_connections = 32

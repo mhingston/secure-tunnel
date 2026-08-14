@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+Cache-Control: no-cache
+X-Compatibility-Fixture: normal-sse-v1
+
+event: response.created
+data: {"type":"response.created","response":{"id":"resp_fixture_1"}}
+
+event: response.output_text.delta
+data: {"delta":"opaque stream bytes"}
+
+event: response.completed
+data: {"type":"response.completed"}
+
+

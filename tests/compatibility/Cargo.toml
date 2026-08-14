@@ -1,0 +1,15 @@
+[package]
+name = "codex-tunnel-compatibility"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[[test]]
+name = "compatibility"
+path = "compatibility.rs"
+
+[dev-dependencies]
+base64.workspace = true
+codex-tunnel = { path = "../../crates/codex-tunnel" }

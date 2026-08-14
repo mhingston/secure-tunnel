@@ -1,0 +1,10 @@
+[package]
+name = "codex-tunnel"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+snow.workspace = true
+thiserror.workspace = true

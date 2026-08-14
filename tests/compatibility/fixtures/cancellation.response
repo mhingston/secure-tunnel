@@ -1,0 +1,6 @@
+HTTP/1.1 499 Client Closed Request
+Content-Type: application/json
+X-Compatibility-Fixture: cancellation-v1
+
+{"error":{"type":"request_cancelled","message":"client closed the fixture request"}}
+

@@ -1,0 +1,7 @@
+HTTP/1.1 429 Too Many Requests
+Content-Type: application/json
+Retry-After: 17
+X-Compatibility-Fixture: rate-limit-v1
+
+{"error":{"type":"rate_limit_exceeded","message":"opaque fixture rate limit"}}
+

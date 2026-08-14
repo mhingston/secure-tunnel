@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+X-Compatibility-Fixture: tool-reasoning-v1
+
+event: response.reasoning_summary_text.delta
+data: {"delta":"opaque reasoning summary"}
+
+event: response.function_call_arguments.delta
+data: {"call_id":"call_fixture_next","delta":"{\"path\":\"README.md\"}"}
+
+event: response.completed
+data: {"type":"response.completed"}
+
+

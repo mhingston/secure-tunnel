@@ -1,0 +1,36 @@
+[workspace]
+members = [
+  "crates/codex-tunnel",
+  "crates/codex-tunnel-client",
+  "crates/codex-tunnel-server",
+  "bench",
+  "tests/integration",
+  "tests/compatibility",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+anyhow = "1.0"
+base64 = "0.22"
+clap = { version = "4.5", features = ["derive"] }
+rand_core = { version = "0.6", features = ["getrandom"] }
+serde = { version = "1.0", features = ["derive"] }
+sha2 = "0.10"
+socket2 = "0.6"
+snow = "0.10"
+thiserror = "2.0"
+tokio = { version = "1.47", features = ["full"] }
+tokio-rustls = "0.26"
+toml = "0.9"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+rustls-native-certs = "0.8"
+rustls-pemfile = "2.2"
+zeroize = "1.8"

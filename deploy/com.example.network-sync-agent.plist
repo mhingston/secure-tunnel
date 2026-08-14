@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Install as a per-user LaunchAgent. Keep this generic label and the
+       corresponding binary name as local operational hygiene only. -->
+  <key>Label</key>
+  <string>com.example.network-sync-agent</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/libexec/network-sync-agent</string>
+    <string>serve</string>
+    <string>--config</string>
+    <string>/Users/REPLACE_WITH_LOCAL_USERNAME/Library/Application Support/NetworkSync/client.toml</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>ThrottleInterval</key><integer>10</integer>
+  <key>StandardOutPath</key>
+  <string>/Users/REPLACE_WITH_LOCAL_USERNAME/Library/Logs/NetworkSync/agent.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/REPLACE_WITH_LOCAL_USERNAME/Library/Logs/NetworkSync/agent-error.log</string>
+</dict>
+</plist>

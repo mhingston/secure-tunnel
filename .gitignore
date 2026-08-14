@@ -1,0 +1,12 @@
+/target/
+/.DS_Store
+**/.DS_Store
+*.key
+*.pem
+*.p12
+*.pfx
+*.log
+*.tar.gz
+*.tmp
+/acceptance/evidence/
+/release-artifacts/
