@@ -53,6 +53,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          cargo build -p secure-tunnel-client -p secure-tunnel-server
           cargo test --workspace --all-targets
           cargo clippy --workspace --all-targets -- -D warnings
           release/tests/release-scripts-test.sh
@@ -61,6 +62,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          if git grep -in -i 'codex'; then
+            echo 'Tracked content contains codex references after validation' >&2
+            exit 1
+          fi
+          remaining_paths="$(find . -path './.git' -prune -o -iname '*codex*' -print)"
+          if [[ -n "$remaining_paths" ]]; then
+            echo 'Paths contain codex references after validation:' >&2
+            printf '%s\n' "$remaining_paths" >&2
+            exit 1
+          fi
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
