@@ -2,7 +2,7 @@ pub mod config;
 
 #[cfg(test)]
 mod tests {
-    use codex_tunnel::MAX_SERVER_STATIC_IDENTITIES;
+    use secure_tunnel::MAX_SERVER_STATIC_IDENTITIES;
 
     use super::config::ServerConfig;
 

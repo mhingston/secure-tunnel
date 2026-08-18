@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 
-//! Cryptographic handshake and record framing for Codex Secure Tunnel.
+//! Cryptographic handshake and record framing for Secure Tunnel.
 
 use std::sync::{Arc, Mutex};
 use std::{collections::HashSet, fmt};

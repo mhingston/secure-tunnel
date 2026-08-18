@@ -7,7 +7,7 @@ usage() {
 usage: install-atomic.sh --artifact-dir DIR --binary NAME --destination PATH
                          [--require-identity IDENTITY] [--dry-run]
 
-NAME is network-sync-agent or codex-tunnel-server.  The destination basename
+NAME is network-sync-agent or secure-tunnel-server.  The destination basename
 must match NAME.  An existing active binary is signature-checked, hard-linked
 to PATH.previous, then atomically replaced.  No service is stopped by this
 script; launchd orchestration remains an operator decision.
@@ -35,7 +35,7 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 [ -n "$artifact_dir" ] && [ -n "$binary" ] && [ -n "$destination" ] || usage
-case "$binary" in network-sync-agent|codex-tunnel-server) ;; *) fail "unsupported release binary: $binary" ;; esac
+case "$binary" in network-sync-agent|secure-tunnel-server) ;; *) fail "unsupported release binary: $binary" ;; esac
 [ "$(basename -- "$destination")" = "$binary" ] || fail 'destination basename must match --binary'
 
 require_darwin

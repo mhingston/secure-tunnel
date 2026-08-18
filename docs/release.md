@@ -14,7 +14,7 @@ Choose the signing identity explicitly. The build script will not inspect the ke
 
 ```sh
 release/build-macos-universal.sh \
-  --output-dir /private/tmp/codex-tunnel-1.0.0-macos \
+  --output-dir /private/tmp/secure-tunnel-1.0.0-macos \
   --sign-identity 'Developer ID Application: Example Operator (TEAMID)'
 ```
 
@@ -22,7 +22,7 @@ The output directory must not already exist. The command builds both `aarch64-ap
 
 ```text
 network-sync-agent       signed universal client artifact
-codex-tunnel-server      signed universal server artifact
+secure-tunnel-server      signed universal server artifact
 SHA256SUMS               published SHA-256 digest manifest
 ```
 
@@ -32,7 +32,7 @@ Run an independent verification after transferring the release directory:
 
 ```sh
 release/verify-artifact.sh \
-  --artifact-dir /path/to/codex-tunnel-1.0.0-macos \
+  --artifact-dir /path/to/secure-tunnel-1.0.0-macos \
   --require-identity 'Developer ID Application: Example Operator (TEAMID)'
 ```
 
@@ -48,7 +48,7 @@ Client example:
 
 ```sh
 release/install-atomic.sh \
-  --artifact-dir /path/to/codex-tunnel-1.0.0-macos \
+  --artifact-dir /path/to/secure-tunnel-1.0.0-macos \
   --binary network-sync-agent \
   --destination /usr/local/libexec/network-sync-agent \
   --require-identity 'Developer ID Application: Example Operator (TEAMID)'
@@ -58,9 +58,9 @@ Server example:
 
 ```sh
 sudo release/install-atomic.sh \
-  --artifact-dir /path/to/codex-tunnel-1.0.0-macos \
-  --binary codex-tunnel-server \
-  --destination /Library/PrivilegedHelperTools/codex-tunnel-server \
+  --artifact-dir /path/to/secure-tunnel-1.0.0-macos \
+  --binary secure-tunnel-server \
+  --destination /Library/PrivilegedHelperTools/secure-tunnel-server \
   --require-identity 'Developer ID Application: Example Operator (TEAMID)'
 ```
 
@@ -70,7 +70,7 @@ Inspect an upgrade without writing any files:
 
 ```sh
 release/install-atomic.sh \
-  --artifact-dir /path/to/codex-tunnel-1.0.0-macos \
+  --artifact-dir /path/to/secure-tunnel-1.0.0-macos \
   --binary network-sync-agent \
   --destination /usr/local/libexec/network-sync-agent \
   --require-identity 'Developer ID Application: Example Operator (TEAMID)' \

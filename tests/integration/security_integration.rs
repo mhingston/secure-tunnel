@@ -18,14 +18,14 @@ use std::{
 };
 
 use base64::{Engine as _, engine::general_purpose::STANDARD};
-use codex_tunnel::{
-    ClientHandshake, Preface, ServerHandshake, StaticKeypair, TransportSession, TunnelError,
-    generate_keypair,
-};
 use rcgen::{BasicConstraints, Certificate, CertificateParams, IsCa};
 use rustls::{
     ClientConfig as RustlsClientConfig, RootCertStore, ServerConfig as RustlsServerConfig,
     pki_types::{CertificateDer, PrivateKeyDer, ServerName},
+};
+use secure_tunnel::{
+    ClientHandshake, Preface, ServerHandshake, StaticKeypair, TransportSession, TunnelError,
+    generate_keypair,
 };
 use tokio::{
     io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt},
@@ -885,7 +885,7 @@ struct TempDir(PathBuf);
 impl TempDir {
     fn new() -> Self {
         let path = std::env::temp_dir().join(format!(
-            "codex-tunnel-security-{}-{}",
+            "secure-tunnel-security-{}-{}",
             std::process::id(),
             TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
         ));
@@ -932,18 +932,18 @@ fn project_root() -> PathBuf {
 }
 
 fn client_binary() -> PathBuf {
-    required_binary("codex-tunnel")
+    required_binary("secure-tunnel")
 }
 
 fn server_binary() -> PathBuf {
-    required_binary("codex-tunnel-server")
+    required_binary("secure-tunnel-server")
 }
 
 fn required_binary(name: &str) -> PathBuf {
     let binary = project_root().join("target/debug").join(name);
     assert!(
         binary.is_file(),
-        "{name} is required for black-box tests; run `cargo build -p codex-tunnel-client -p codex-tunnel-server` before this test target"
+        "{name} is required for black-box tests; run `cargo build -p secure-tunnel-client -p secure-tunnel-server` before this test target"
     );
     binary
 }

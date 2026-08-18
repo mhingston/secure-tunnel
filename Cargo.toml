@@ -1,8 +1,8 @@
 [workspace]
 members = [
-  "crates/codex-tunnel",
-  "crates/codex-tunnel-client",
-  "crates/codex-tunnel-server",
+  "crates/secure-tunnel",
+  "crates/secure-tunnel-client",
+  "crates/secure-tunnel-server",
   "bench",
   "tests/integration",
   "tests/compatibility",

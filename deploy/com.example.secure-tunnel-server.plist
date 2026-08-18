@@ -5,19 +5,19 @@
   <!-- Install as a system LaunchDaemon after creating the data directory with
        owner root:wheel and mode 0700. -->
   <key>Label</key>
-  <string>com.example.codex-tunnel-server</string>
+  <string>com.example.secure-tunnel-server</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/Library/PrivilegedHelperTools/codex-tunnel-server</string>
+    <string>/Library/PrivilegedHelperTools/secure-tunnel-server</string>
     <string>serve</string>
     <string>--config</string>
-    <string>/Library/Application Support/CodexTunnel/server.toml</string>
+    <string>/Library/Application Support/SecureTunnel/server.toml</string>
   </array>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ProcessType</key><string>Background</string>
   <key>ThrottleInterval</key><integer>10</integer>
-  <key>StandardOutPath</key><string>/var/log/codex-tunnel-server.log</string>
-  <key>StandardErrorPath</key><string>/var/log/codex-tunnel-server-error.log</string>
+  <key>StandardOutPath</key><string>/var/log/secure-tunnel-server.log</string>
+  <key>StandardErrorPath</key><string>/var/log/secure-tunnel-server-error.log</string>
 </dict>
 </plist>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Validate operator-captured, external release evidence.  This script does not
-# run Codex, benchmark a route, sign a binary, or manufacture a release claim.
+# run application, benchmark a route, sign a binary, or manufacture a release claim.
 # It only accepts a complete, internally consistent evidence bundle.
 set -uo pipefail
 
@@ -9,7 +9,7 @@ usage() {
 Usage: scripts/live-acceptance.sh --evidence-dir DIRECTORY
 
 Validate the external acceptance evidence described in docs/acceptance.md.
-The directory must contain live-codex.json, benchmark.json,
+The directory must contain live-application.json, benchmark.json,
 benchmark-attestation.json, artifacts.json, and every capture referenced by
 those manifests. The command exits non-zero and prints every unmet gate.
 USAGE
@@ -129,7 +129,7 @@ live=''
 benchmark=''
 attestation=''
 artifacts=''
-if require_json live-codex.json; then live=$(manifest_path live-codex.json); fi
+if require_json live-application.json; then live=$(manifest_path live-application.json); fi
 if require_json benchmark.json; then benchmark=$(manifest_path benchmark.json); fi
 if require_json benchmark-attestation.json; then attestation=$(manifest_path benchmark-attestation.json); fi
 if require_json artifacts.json; then artifacts=$(manifest_path artifacts.json); fi
@@ -151,7 +151,7 @@ if [[ -n "$live" ]]; then
     (.environment.route | type == "string" and length > 0) and
     (.cases | type == "array")
   ' "$live" >/dev/null; then
-    unmet 'live-codex.json has missing required fields'
+    unmet 'live-application.json has missing required fields'
   else
     for case_id in "${required_cases[@]}"; do
       if ! jq -e --arg id "$case_id" '
@@ -163,7 +163,7 @@ if [[ -n "$live" ]]; then
           (.tunnel.capture.path | type == "string") and
           (.tunnel.capture.sha256 | type == "string"))
       ' "$live" >/dev/null; then
-        unmet "live Codex case ${case_id} is not passed directly and through the tunnel"
+        unmet "live application case ${case_id} is not passed directly and through the tunnel"
         continue
       fi
       require_capture_object "$live" "(.cases[] | select(.id == \"$case_id\") | .direct.capture)" "live ${case_id} direct capture"
@@ -177,7 +177,7 @@ if [[ -n "$live" ]]; then
         ([.cases[] | select(.id == "websocket")][0] |
           .direct.status == "passed" and .tunnel.status == "passed")
       ' "$live" >/dev/null; then
-        unmet 'live Codex WebSocket case is required but is not passed directly and through the tunnel'
+        unmet 'live application WebSocket case is required but is not passed directly and through the tunnel'
       else
         require_capture_object "$live" '(.cases[] | select(.id == "websocket") | .direct.capture)' 'live websocket direct capture'
         require_capture_object "$live" '(.cases[] | select(.id == "websocket") | .tunnel.capture)' 'live websocket tunnel capture'
@@ -187,7 +187,7 @@ if [[ -n "$live" ]]; then
       ([.cases[] | select(.id == "websocket")][0] |
         .status == "not_applicable" and (.reason | type == "string" and length > 0))
     ' "$live" >/dev/null; then
-      unmet 'live Codex WebSocket exemption is missing or lacks a reason'
+      unmet 'live application WebSocket exemption is missing or lacks a reason'
     fi
   fi
 fi

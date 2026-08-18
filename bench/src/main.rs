@@ -8,7 +8,7 @@ use std::{
 
 use anyhow::{Context, Result, bail};
 use clap::{Parser, Subcommand};
-use codex_tunnel_bench::{
+use secure_tunnel_bench::{
     BENCHMARK_BYTES, EndpointReport, EndpointSample, compare_p95_us, endpoint_report,
     first_byte_sample, memory_per_active_connection_kib, serve, stream_sample,
 };
@@ -16,7 +16,7 @@ use serde::Serialize;
 use tokio::{net::TcpListener, time::timeout};
 
 #[derive(Debug, Parser)]
-#[command(about = "Release benchmark harness for the Codex Secure Tunnel")]
+#[command(about = "Release benchmark harness for the Secure Tunnel")]
 struct Cli {
     #[command(subcommand)]
     command: Command,

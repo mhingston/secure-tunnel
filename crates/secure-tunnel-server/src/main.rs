@@ -12,9 +12,9 @@ use std::{
 use anyhow::{Context, Result, bail};
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::{Parser, Subcommand};
-use codex_tunnel::{ServerHandshake, TransportReceiver, TransportSender, generate_keypair};
-use codex_tunnel_server::config::ServerConfig;
 use rustls::ServerConfig as RustlsServerConfig;
+use secure_tunnel::{ServerHandshake, TransportReceiver, TransportSender, generate_keypair};
+use secure_tunnel_server::config::ServerConfig;
 use sha2::{Digest, Sha256};
 use socket2::SockRef;
 use tokio::{
@@ -29,7 +29,7 @@ use tracing::{info, warn};
 use zeroize::Zeroizing;
 
 #[derive(Parser)]
-#[command(about = "Remote ingress for the Codex Secure Tunnel")]
+#[command(about = "Remote ingress for the Secure Tunnel")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -314,7 +314,7 @@ async fn relay(
     result
 }
 
-fn tls_acceptor(config: &codex_tunnel_server::config::OuterTlsConfig) -> Result<TlsAcceptor> {
+fn tls_acceptor(config: &secure_tunnel_server::config::OuterTlsConfig) -> Result<TlsAcceptor> {
     let certificate_path = config
         .certificate_file
         .as_ref()
@@ -381,7 +381,7 @@ async fn copy_encrypt<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     telemetry: Arc<ConnectionTelemetry>,
     activity: mpsc::Sender<()>,
 ) -> Result<()> {
-    let mut buffer = [0; codex_tunnel::MAX_PLAINTEXT_RECORD];
+    let mut buffer = [0; secure_tunnel::MAX_PLAINTEXT_RECORD];
     loop {
         let count = read.read(&mut buffer).await?;
         if count == 0 {
@@ -428,7 +428,7 @@ async fn copy_decrypt<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     }
 }
 async fn read_handshake_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Vec<u8>> {
-    read_length_framed(reader, 2, codex_tunnel::MAX_HANDSHAKE_MESSAGE).await
+    read_length_framed(reader, 2, secure_tunnel::MAX_HANDSHAKE_MESSAGE).await
 }
 async fn read_record_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Option<Vec<u8>>> {
     // Clean EOF between frames is orderly session termination. EOF after any
@@ -440,7 +440,7 @@ async fn read_record_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Optio
     }
     reader.read_exact(&mut header[1..]).await?;
     let length = u32::from_be_bytes(header) as usize;
-    if length == 0 || length > codex_tunnel::MAX_CIPHERTEXT_RECORD {
+    if length == 0 || length > secure_tunnel::MAX_CIPHERTEXT_RECORD {
         bail!("invalid frame length {length}");
     }
     let mut frame = header.to_vec();
@@ -698,7 +698,7 @@ fn read_private_key(path: &std::path::Path) -> Result<Zeroizing<[u8; 32]>> {
     })?))
 }
 fn read_server_private_keys(
-    identity: &codex_tunnel_server::config::IdentityConfig,
+    identity: &secure_tunnel_server::config::IdentityConfig,
 ) -> Result<Vec<Zeroizing<[u8; 32]>>> {
     std::iter::once(&identity.private_key_file)
         .chain(identity.additional_private_key_files.iter())
@@ -841,8 +841,10 @@ mod tests {
     fn configuration_permissions_reject_group_or_world_access() {
         use std::os::unix::fs::PermissionsExt;
 
-        let path =
-            std::env::temp_dir().join(format!("codex-tunnel-server-config-{}", std::process::id()));
+        let path = std::env::temp_dir().join(format!(
+            "secure-tunnel-server-config-{}",
+            std::process::id()
+        ));
         std::fs::write(&path, "[listen]\n").expect("write test config");
         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644))
             .expect("make unsafe");
@@ -859,7 +861,7 @@ mod tests {
         use std::os::unix::fs::PermissionsExt;
 
         let parent = std::env::temp_dir().join(format!(
-            "codex-tunnel-server-key-parent-{}",
+            "secure-tunnel-server-key-parent-{}",
             std::process::id()
         ));
         let _ = std::fs::remove_dir_all(&parent);
@@ -887,7 +889,7 @@ mod tests {
         use std::os::unix::{fs::PermissionsExt, fs::symlink};
 
         let directory = std::env::temp_dir().join(format!(
-            "codex-tunnel-server-config-link-{}",
+            "secure-tunnel-server-config-link-{}",
             std::process::id()
         ));
         let _ = std::fs::remove_dir_all(&directory);

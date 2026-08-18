@@ -36,7 +36,7 @@ done
 digest() { shasum -a 256 "$tmp/evidence/$1" | awk '{print $1}'; }
 capture_json() { printf '{"path":"captures/%s.txt","sha256":"%s"}' "$1" "$(digest "captures/$1.txt")"; }
 
-cat >"$tmp/evidence/live-codex.json" <<JSON
+cat >"$tmp/evidence/live-application.json" <<JSON
 {
   "schema_version": 1,
   "captured_at_utc": "2026-08-14T12:00:00Z",
@@ -90,9 +90,9 @@ cat >"$tmp/evidence/benchmark-attestation.json" <<JSON
 JSON
 
 printf 'pidstat output\n' >"$tmp/evidence/cpu-samples.txt"
-printf 'artifact bytes\n' >"$tmp/evidence/artifacts/codex-tunnel-server"
+printf 'artifact bytes\n' >"$tmp/evidence/artifacts/secure-tunnel-server"
 printf 'artifact bytes\n' >"$tmp/evidence/artifacts/network-sync-agent"
-server_digest=$(shasum -a 256 "$tmp/evidence/artifacts/codex-tunnel-server" | awk '{print $1}')
+server_digest=$(shasum -a 256 "$tmp/evidence/artifacts/secure-tunnel-server" | awk '{print $1}')
 client_digest=$(shasum -a 256 "$tmp/evidence/artifacts/network-sync-agent" | awk '{print $1}')
 cat >"$tmp/evidence/artifacts.json" <<JSON
 {
@@ -100,7 +100,7 @@ cat >"$tmp/evidence/artifacts.json" <<JSON
   "release_id": "candidate-20260814",
   "build_host": "macos-xcode-clt",
   "artifacts": [
-    {"role": "server", "path": "artifacts/codex-tunnel-server", "sha256": "$server_digest", "architectures": ["arm64", "x86_64"], "codesign_capture": $(capture_json server-codesign), "lipo_capture": $(capture_json server-lipo), "runtime_smoke_capture": $(capture_json server-runtime)},
+    {"role": "server", "path": "artifacts/secure-tunnel-server", "sha256": "$server_digest", "architectures": ["arm64", "x86_64"], "codesign_capture": $(capture_json server-codesign), "lipo_capture": $(capture_json server-lipo), "runtime_smoke_capture": $(capture_json server-runtime)},
     {"role": "client", "path": "artifacts/network-sync-agent", "sha256": "$client_digest", "architectures": ["arm64", "x86_64"], "codesign_capture": $(capture_json client-codesign), "lipo_capture": $(capture_json client-lipo), "runtime_smoke_capture": $(capture_json client-runtime)}
   ]
 }

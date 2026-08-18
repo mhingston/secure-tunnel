@@ -1,4 +1,4 @@
-//! Reproducible release measurements for the Codex Secure Tunnel.
+//! Reproducible release measurements for the Secure Tunnel.
 //!
 //! The wire protocol in this crate is deliberately limited to a temporary test
 //! responder. It is not part of the deployed tunnel protocol or the

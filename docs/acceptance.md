@@ -13,7 +13,7 @@ the source tree:
 scripts/live-acceptance.sh --evidence-dir /secure/release-evidence/2026-08-14
 ```
 
-It never runs Codex, benchmarks a route, signs software, or declares that an
+It never runs application, benchmarks a route, signs software, or declares that an
 environment was tested. It checks that supplied evidence is complete, tied to
 the same release, and has not changed since its manifest was written. A
 non-zero exit and `UNMET:` lines are the only valid result for absent,
@@ -26,7 +26,7 @@ schemas and capture procedure.
 
 | Gate | Required evidence | Validator outcome |
 | --- | --- | --- |
-| Live Codex transparency | `live-codex.json`, with immutable direct and tunnel captures for every supported case | All required cases must pass in both paths. |
+| Live application transparency | `live-application.json`, with immutable direct and tunnel captures for every supported case | All required cases must pass in both paths. |
 | Production performance | Harness-produced `benchmark.json` plus `benchmark-attestation.json` with real hardware, five idle/active RSS samples, and CPU capture | 64 MiB/full-duplex, prompt-write, latency, throughput, and RSS gates must all be true and internally consistent. |
 | Signed universal macOS artifacts | `artifacts.json`, each universal binary, and captured `codesign`, `lipo`, and binary-only smoke-test output | Server and client must each have arm64/x86_64, an attested digest, and all three captures. |
 
@@ -39,7 +39,7 @@ files, and stale hashes are rejected.
 ## What not to claim
 
 Do not call a release complete merely because unit/integration tests or
-synthetic validator tests pass. Do not replace live Codex traffic with fixture
+synthetic validator tests pass. Do not replace live application traffic with fixture
 tests, a benchmark responder on a different machine, a CI RSS measurement, or
 a claimed macOS signature without the captured command output and final binary.
 Keep OAuth tokens, prompts, model output, private keys, and proxy credentials

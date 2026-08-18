@@ -70,8 +70,8 @@ On the client, install the signed binary as the generic
 hygiene and does not hide network traffic. Store config/key material in
 `~/Library/Application Support/NetworkSync/` and logs in
 `~/Library/Logs/NetworkSync/`. On ingress, use
-`/Library/PrivilegedHelperTools/codex-tunnel-server` and
-`/Library/Application Support/CodexTunnel/`.
+`/Library/PrivilegedHelperTools/secure-tunnel-server` and
+`/Library/Application Support/SecureTunnel/`.
 
 Create private directories and files before loading services:
 
@@ -80,9 +80,9 @@ install -d -m 700 "$HOME/Library/Application Support/NetworkSync"
 install -d -m 700 "$HOME/Library/Logs/NetworkSync"
 chmod 600 "$HOME/Library/Application Support/NetworkSync/client.toml" \
   "$HOME/Library/Application Support/NetworkSync/client.key"
-sudo install -d -o root -g wheel -m 700 "/Library/Application Support/CodexTunnel"
-sudo chmod 600 "/Library/Application Support/CodexTunnel/server.toml" \
-  "/Library/Application Support/CodexTunnel/server.key"
+sudo install -d -o root -g wheel -m 700 "/Library/Application Support/SecureTunnel"
+sudo chmod 600 "/Library/Application Support/SecureTunnel/server.toml" \
+  "/Library/Application Support/SecureTunnel/server.key"
 ```
 
 Outer TLS is optional defence in depth. When enabled, both tunnel binaries use
@@ -102,9 +102,9 @@ loading:
 
 ```sh
 deploy/validate-install.sh --client "$HOME/Library/Application Support/NetworkSync/client.toml"
-sudo deploy/validate-install.sh --server "/Library/Application Support/CodexTunnel/server.toml"
+sudo deploy/validate-install.sh --server "/Library/Application Support/SecureTunnel/server.toml"
 plutil -lint deploy/com.example.network-sync-agent.plist
-plutil -lint deploy/com.example.codex-tunnel-server.plist
+plutil -lint deploy/com.example.secure-tunnel-server.plist
 ```
 
 Install the client plist at `~/Library/LaunchAgents/` and load it into the GUI
@@ -113,7 +113,7 @@ mode `0644`) and load it into the system domain:
 
 ```sh
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.example.network-sync-agent.plist"
-sudo launchctl bootstrap system /Library/LaunchDaemons/com.example.codex-tunnel-server.plist
+sudo launchctl bootstrap system /Library/LaunchDaemons/com.example.secure-tunnel-server.plist
 ```
 
 For changes, use `launchctl bootout` for the corresponding domain before
@@ -124,7 +124,7 @@ SIGTERM.
 ## Update and rollback
 
 Keep the previous signed binary beside the active binary, for example
-`network-sync-agent.previous` and `codex-tunnel-server.previous`. Verify the
+`network-sync-agent.previous` and `secure-tunnel-server.previous`. Verify the
 new universal binary before installation, stop the service, then use `mv` on
 the same volume for an atomic replacement. Retain the previous config/key pair
 only when it remains valid for the current rotation overlap.

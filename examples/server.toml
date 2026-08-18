@@ -8,8 +8,8 @@ address = "REPLACE_WITH_PRIVATE_INTERFACE:8443"
 # Optional TLS 1.3 defence in depth. Noise IK remains mandatory inside TLS.
 [outer_tls]
 enabled = false
-# certificate_file = "/Library/Application Support/CodexTunnel/tls-cert.pem"
-# private_key_file = "/Library/Application Support/CodexTunnel/tls-key.pem"
+# certificate_file = "/Library/Application Support/SecureTunnel/tls-cert.pem"
+# private_key_file = "/Library/Application Support/SecureTunnel/tls-key.pem"
 
 # The tunnel ingress is destination-restricted: it can connect only to one
 # operator-chosen service on the remote host's loopback interface. The service
@@ -21,9 +21,9 @@ address = "127.0.0.1:9000"
 # address = "127.0.0.1:3128"
 
 [identity]
-private_key_file = "/Library/Application Support/CodexTunnel/server.key"
+private_key_file = "/Library/Application Support/SecureTunnel/server.key"
 # Bounded overlap for server-key rotation (maximum eight total identities).
-# additional_private_key_files = ["/Library/Application Support/CodexTunnel/server-previous.key"]
+# additional_private_key_files = ["/Library/Application Support/SecureTunnel/server-previous.key"]
 
 [[authorized_clients]]
 name = "REPLACE_WITH_CLIENT_NAME"

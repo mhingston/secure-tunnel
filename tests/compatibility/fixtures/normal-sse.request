@@ -3,5 +3,5 @@ Host: compat.local
 Content-Type: application/json
 X-Compatibility-Fixture: normal-sse-v1
 
-{"model":"gpt-5-codex","input":"opaque normal streaming turn"}
+{"model":"gpt-5-application","input":"opaque normal streaming turn"}
 

@@ -1,7 +1,7 @@
 use std::{collections::HashSet, net::SocketAddr, path::PathBuf};
 
 use anyhow::{Context, Result, bail};
-use codex_tunnel::{MAX_CONCURRENT_CONNECTIONS, MAX_SERVER_STATIC_IDENTITIES};
+use secure_tunnel::{MAX_CONCURRENT_CONNECTIONS, MAX_SERVER_STATIC_IDENTITIES};
 use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize)]

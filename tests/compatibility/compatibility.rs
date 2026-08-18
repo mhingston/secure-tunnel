@@ -3,7 +3,7 @@
 //! The fixtures in `fixtures/` are deliberately canned raw TCP conversations.
 //! This harness never parses HTTP, SSE, WebSocket, Responses, tool, or
 //! reasoning data: it writes and compares the fixture bytes exactly. It is not
-//! a substitute for authorised live Codex + ChatGPT end-to-end validation.
+//! a substitute for authorised live application + ChatGPT end-to-end validation.
 
 use std::{
     fs,
@@ -21,7 +21,7 @@ use std::{
 };
 
 use base64::{Engine as _, engine::general_purpose::STANDARD};
-use codex_tunnel::{StaticKeypair, generate_keypair};
+use secure_tunnel::{StaticKeypair, generate_keypair};
 
 const WAIT: Duration = Duration::from_secs(10);
 // The first tunneled request also initiates Noise, so leave headroom for a
@@ -1076,7 +1076,7 @@ struct TempDir(PathBuf);
 impl TempDir {
     fn new() -> Self {
         let path = std::env::temp_dir().join(format!(
-            "codex-tunnel-compatibility-{}-{}",
+            "secure-tunnel-compatibility-{}-{}",
             std::process::id(),
             TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed)
         ));
@@ -1124,18 +1124,18 @@ fn project_root() -> PathBuf {
 }
 
 fn client_binary() -> PathBuf {
-    required_binary("codex-tunnel")
+    required_binary("secure-tunnel")
 }
 
 fn server_binary() -> PathBuf {
-    required_binary("codex-tunnel-server")
+    required_binary("secure-tunnel-server")
 }
 
 fn required_binary(name: &str) -> PathBuf {
     let binary = project_root().join("target/debug").join(name);
     assert!(
         binary.is_file(),
-        "{name} is required for black-box compatibility tests; run `cargo build -p codex-tunnel-client -p codex-tunnel-server` before this test target"
+        "{name} is required for black-box compatibility tests; run `cargo build -p secure-tunnel-client -p secure-tunnel-server` before this test target"
     );
     binary
 }

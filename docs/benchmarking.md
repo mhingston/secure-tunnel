@@ -27,7 +27,7 @@ as the direct private-LAN baseline.
 The current compatibility service does not expose this protocol. Consequently,
 the `serve` command is a staging responder for the tunnel transport's required
 64 MiB byte-stream and small-flush checks. It is not evidence that the live
-Codex compatibility deployment has met every release gate; production evidence
+application compatibility deployment has met every release gate; production evidence
 must use a controlled, release-approved benchmark endpoint on that deployment.
 
 ## Repeatable invocation
@@ -35,14 +35,14 @@ must use a controlled, release-approved benchmark endpoint on that deployment.
 Build the exact release candidate first, not a debug binary:
 
 ```sh
-cargo build --release -p codex-tunnel-bench
+cargo build --release -p secure-tunnel-bench
 ```
 
 On the remote host, start the temporary responder at the fixed loopback port
 configured as the ingress destination for this measurement:
 
 ```sh
-./target/release/codex-tunnel-bench serve --listen 127.0.0.1:19090
+./target/release/secure-tunnel-bench serve --listen 127.0.0.1:19090
 ```
 
 Start the tunnel server/client with their release configuration. Arrange the
@@ -50,13 +50,13 @@ controlled direct route and the local tunnel listener, then run the client-host
 command with explicit endpoints and an out-of-tree output path:
 
 ```sh
-./target/release/codex-tunnel-bench run \
+./target/release/secure-tunnel-bench run \
   --direct DIRECT_BENCHMARK_HOST:PORT \
   --tunnel 127.0.0.1:18787 \
   --samples 20 \
   --timeout-seconds 30 \
   --hardware-note 'client: …; remote: …; route: private LAN; build: SHA-256 …' \
-  --output /var/tmp/codex-tunnel-release-evidence/release-YYYYMMDD.json
+  --output /var/tmp/secure-tunnel-release-evidence/release-YYYYMMDD.json
 ```
 
 `run` refuses to overwrite an evidence file. It performs, on **each** path:
@@ -82,7 +82,7 @@ apart. Keep the compatibility service and the temporary responder out of the
 sum; they belong to both paths and are not tunnel-owned.
 
 1. Start the release tunnel processes and wait 30 seconds with no benchmark
-   connections. On each host, run `codex-tunnel-bench rss --pid PID` five times;
+   connections. On each host, run `secure-tunnel-bench rss --pid PID` five times;
    sum corresponding client and ingress samples, then retain the median as
    `BASELINE_KIB`.
 2. Hold `N` persistent tunnel benchmark connections active for at least 30
@@ -92,7 +92,7 @@ sum; they belong to both paths and are not tunnel-owned.
 3. Record those values with the result:
 
 ```sh
-./target/release/codex-tunnel-bench run ... \
+./target/release/secure-tunnel-bench run ... \
   --memory-baseline-rss-kib BASELINE_KIB \
   --memory-active-rss-kib ACTIVE_KIB \
   --memory-active-connections N

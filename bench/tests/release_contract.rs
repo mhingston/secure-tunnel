@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use codex_tunnel_bench::{
+use secure_tunnel_bench::{
     BENCHMARK_BYTES, memory_per_active_connection_kib, percentile_95, throughput_bytes_per_second,
 };
 
