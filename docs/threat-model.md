@@ -8,9 +8,8 @@ ChaCha20-Poly1305, and SHA-256 (`Noise_IK_25519_ChaChaPoly_SHA256`). It provides
 confidentiality, integrity, server authentication by a pinned public key, and
 client authentication by the server allow-list.
 
-The tunnel protects an opaque TCP byte stream and is not coupled to Codex,
-HTTP, SOCKS, or any other application protocol. The current Codex deployment is
-one use of this transport rather than part of its security protocol.
+The tunnel protects an opaque TCP byte stream and is not coupled to HTTP,
+SOCKS, or any other application protocol.
 
 Outer TCP/TLS is transport only. TLS 1.3 is implemented as defence in depth but
 is not an application identity or confidentiality root. A contract test gives
@@ -24,8 +23,7 @@ Noise.
 - The ingress host, its tunnel process, its static private key, and its fixed
   loopback destination.
 - The operator-selected loopback service after ingress has authenticated a
-  client. In the original deployment this is the Codex compatibility service;
-  in another composition it may be a dedicated forward proxy.
+  client. This may be an application service or a dedicated forward proxy.
 - An out-of-band process that verifies and provisions public-key fingerprints.
 - The Noise implementation and the host OS protections for private-key files.
 
@@ -41,11 +39,8 @@ Noise.
 
 ## Protected
 
-- Application payloads carried in the opaque TCP stream. In the Codex
-  deployment this includes prompts, source code, model output, tool
-  inputs/outputs, and HTTP/SSE/WebSocket bytes. In a proxy composition this
-  includes the proxy protocol stream between the local application and the
-  ingress host.
+- Application payloads carried in the opaque TCP stream, including any proxy
+  protocol stream between the local application and the ingress host.
 - Tunnel endpoint identity: a client accepts only its configured server static
   public key; ingress accepts only configured client static public keys.
 - Payload integrity: an invalid handshake, record, tag, version, or length
@@ -68,10 +63,9 @@ Noise.
 ## Operational boundaries
 
 The client listener is loopback-only, normally `127.0.0.1:18787`. The server
-has one statically configured loopback destination, normally
-`127.0.0.1:8787` in the Codex deployment. It is not a SOCKS proxy, HTTP forward
-proxy, or arbitrary port forwarder. The tunnel never parses, rewrites, or logs
-application payloads.
+has one statically configured loopback destination. It is not a SOCKS proxy,
+HTTP forward proxy, or arbitrary port forwarder. The tunnel never parses,
+rewrites, or logs application payloads.
 
 Generic egress is composed by placing a separately managed forward proxy at the
 fixed loopback destination. That proxy, not the tunnel server, interprets
