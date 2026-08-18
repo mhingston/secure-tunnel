@@ -19,22 +19,23 @@ application protocol        secure transport             downstream policy
 The downstream service owns whatever application semantics are required after
 the authenticated encrypted channel terminates.
 
-## Codex compatibility-service composition
+## Fixed-service composition
 
-The original deployment terminates the tunnel at the compatibility service:
+The simplest deployment terminates the tunnel at one application service on the
+ingress host:
 
 ```text
-Codex -> localhost tunnel client -> Noise -> tunnel ingress
-                                              |
-                                              v
-                                   127.0.0.1:8787
-                                              |
-                                              v
-                                  compatibility service
+application -> localhost tunnel client -> Noise -> tunnel ingress
+                                                  |
+                                                  v
+                                       127.0.0.1:9000
+                                                  |
+                                                  v
+                                      application service
 ```
 
-The tunnel does not know that the byte stream contains Codex HTTP, Responses,
-SSE, WebSocket, or OAuth traffic.
+The tunnel does not know what application protocol is carried by that byte
+stream.
 
 ## Forward-proxy composition
 
@@ -116,13 +117,13 @@ When that service is a forward proxy:
 The ingress firewall remains an independent control and should restrict access
 to the tunnel listener to the intended client population where practical.
 
-## Configuration example
+## Configuration examples
 
-For the original compatibility service:
+For a fixed application service:
 
 ```toml
 [destination]
-address = "127.0.0.1:8787"
+address = "127.0.0.1:9000"
 ```
 
 For a separately managed forward proxy listening on loopback:
