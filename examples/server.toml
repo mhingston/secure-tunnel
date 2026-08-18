@@ -13,10 +13,10 @@ enabled = false
 
 # The tunnel ingress is destination-restricted: it can connect only to one
 # operator-chosen service on the remote host's loopback interface. The service
-# may be the original Codex compatibility service, a dedicated forward proxy,
-# or another trusted TCP service. Destination selection is never client-driven.
+# may be an application service, a dedicated forward proxy, or another trusted
+# TCP service. Destination selection is never client-driven.
 [destination]
-address = "127.0.0.1:8787"
+address = "127.0.0.1:9000"
 # Example for a separately managed forward proxy:
 # address = "127.0.0.1:3128"
 
