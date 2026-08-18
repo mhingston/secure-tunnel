@@ -3,8 +3,8 @@
 ## Scope
 
 Version 1 carries one opaque, bidirectional TCP byte stream. It does not know
-about HTTP, Codex, Responses, SSE, WebSockets, OAuth, SOCKS, forward-proxy
-semantics, or destinations selected by a client.
+about HTTP, SSE, WebSockets, OAuth, SOCKS, forward-proxy semantics, or
+destinations selected by a client.
 
 Application protocols are deliberately outside the encrypted transport. The
 server terminates the Noise channel and connects the recovered byte stream to
@@ -95,14 +95,14 @@ version, not an implicit compatibility change.
 
 ## Compatibility and versioning
 
-The protocol version describes this encrypted transport only, not a Codex
-release or downstream service. Unknown major versions fail with a diagnostic.
-Minor versions may add only explicitly negotiated compatible behavior.
-Transport configuration has no host/port requested by the client: ingress
-connects solely to its configured loopback service.
+The protocol version describes this encrypted transport only, not any
+application release or downstream service. Unknown major versions fail with a
+diagnostic. Minor versions may add only explicitly negotiated compatible
+behavior. Transport configuration has no host/port requested by the client:
+ingress connects solely to its configured loopback service.
 
 The `CDXT` preface and existing crate/binary names are historical identifiers;
-they do not imply that Version 1 payload semantics are Codex-specific.
+they do not define Version 1 payload semantics.
 
 ## Key rotation rule
 
