@@ -101,8 +101,10 @@ diagnostic. Minor versions may add only explicitly negotiated compatible
 behavior. Transport configuration has no host/port requested by the client:
 ingress connects solely to its configured loopback service.
 
-The `CDXT` preface and existing crate/binary names are historical identifiers;
-they do not define Version 1 payload semantics.
+The `CDXT` preface is retained as the Version 1 wire magic for compatibility
+with existing tunnel peers. It does not define or constrain payload semantics.
+Changing the preface would be a protocol compatibility change and therefore
+requires an explicit new protocol version rather than a project-naming change.
 
 ## Key rotation rule
 
