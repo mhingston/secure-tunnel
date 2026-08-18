@@ -1,0 +1,69 @@
+name: One-shot secure tunnel rename
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    if: github.head_ref == 'docs/generic-tunnel-composition'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Rename project artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git mv crates/codex-tunnel crates/secure-tunnel
+          git mv crates/codex-tunnel-client crates/secure-tunnel-client
+          git mv crates/codex-tunnel-server crates/secure-tunnel-server
+          git mv deploy/com.example.codex-tunnel-server.plist deploy/com.example.secure-tunnel-server.plist
+
+          while IFS= read -r -d '' file; do
+            perl -0pi -e 's/codex-secure-tunnel/secure-tunnel/g; s/CodexTunnel/SecureTunnel/g; s/CODEX_TUNNEL/SECURE_TUNNEL/g; s/codex_tunnel/secure_tunnel/g; s/codex-tunnel/secure-tunnel/g; s/Codex Secure Tunnel/Secure Tunnel/g; s/Codex tunnel/Secure Tunnel/g; s/\bCodex\b/application/g; s/\bcodex\b/application/g' "$file"
+          done < <(git grep -Ilz -i 'codex' || true)
+
+          # This workflow is deliberately ephemeral; the migration commit must
+          # not leave repository automation behind just to perform a rename.
+          rm -f .github/workflows/rename-secure-tunnel.yml
+
+          cargo fmt --all
+
+          if git grep -in -i 'codex'; then
+            echo 'Tracked content still contains codex references' >&2
+            exit 1
+          fi
+
+          remaining_paths="$(find . -path './.git' -prune -o -iname '*codex*' -print)"
+          if [[ -n "$remaining_paths" ]]; then
+            echo 'Paths still contain codex references:' >&2
+            printf '%s\n' "$remaining_paths" >&2
+            exit 1
+          fi
+
+      - name: Validate workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo test --workspace --all-targets
+          cargo clippy --workspace --all-targets -- -D warnings
+          release/tests/release-scripts-test.sh
+
+      - name: Commit migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'refactor: remove application-specific naming'
+          git push origin HEAD:${{ github.head_ref }}
