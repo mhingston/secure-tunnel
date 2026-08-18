@@ -11,10 +11,14 @@ enabled = false
 # certificate_file = "/Library/Application Support/CodexTunnel/tls-cert.pem"
 # private_key_file = "/Library/Application Support/CodexTunnel/tls-key.pem"
 
-# The tunnel ingress is destination-restricted: it can only connect to the
-# existing compatibility service on the remote host's loopback interface.
+# The tunnel ingress is destination-restricted: it can connect only to one
+# operator-chosen service on the remote host's loopback interface. The service
+# may be the original Codex compatibility service, a dedicated forward proxy,
+# or another trusted TCP service. Destination selection is never client-driven.
 [destination]
 address = "127.0.0.1:8787"
+# Example for a separately managed forward proxy:
+# address = "127.0.0.1:3128"
 
 [identity]
 private_key_file = "/Library/Application Support/CodexTunnel/server.key"
