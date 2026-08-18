@@ -4,8 +4,14 @@
 
 The client and remote ingress are native Rust binaries. The restricted Mac runs
 the client as a per-user LaunchAgent and exposes only `127.0.0.1:18787`. The
-remote Mac runs ingress as a LaunchDaemon and forwards only to the existing
-compatibility service at `127.0.0.1:8787`.
+remote Mac runs ingress as a LaunchDaemon and forwards only to one configured
+loopback TCP service.
+
+The current Codex deployment uses the compatibility service at
+`127.0.0.1:8787`, but that service is not part of the tunnel protocol. A
+different deployment may point the same fixed destination at another trusted
+loopback service, such as a separately managed HTTP or SOCKS forward proxy.
+See [composition.md](composition.md).
 
 Use [client.toml](../examples/client.toml) and
 [server.toml](../examples/server.toml) as templates. They intentionally contain
@@ -14,6 +20,36 @@ placeholders and must fail validation until completed.
 Both roles default to at most 32 active sessions and reject a configured limit
 above 1,024. This is a per-process resource bound, not an authentication or
 network firewall control.
+
+## Choosing the downstream service
+
+The ingress `destination.address` must remain a single loopback address. The
+server does not accept a host or port selected by the client and must not be
+extended into a general-purpose forward proxy.
+
+For the original Codex compatibility service:
+
+```toml
+[destination]
+address = "127.0.0.1:8787"
+```
+
+For a dedicated forward proxy listening locally on the ingress host:
+
+```toml
+[destination]
+address = "127.0.0.1:3128"
+```
+
+In the latter composition, the proxy owns destination routing, DNS behaviour,
+authentication, ACLs, egress restrictions, and proxy logging. The tunnel only
+authenticates the tunnel peers and transports the opaque TCP stream to that
+fixed local service.
+
+Before changing the destination, verify that the intended loopback service is
+bound only as broadly as required and that its own access policy is appropriate
+for authenticated tunnel clients. The ingress `doctor` command must be able to
+connect to the configured destination.
 
 ## Binary-only macOS installation
 
@@ -105,12 +141,11 @@ Run the binary's `doctor` command after deployment. The client doctor binds its
 configured loopback address temporarily and performs a real outer-transport
 and pinned Noise handshake to the configured ingress; it sends no application
 payload. The ingress doctor checks its own listener and fixed destination
-directly. Review only structured,
-non-sensitive JSON logs/metrics: active connections, handshake result, decrypt
-failures, destination-connect failures, bytes, and close reason. Never enable
-payload logging for debugging. Both `serve` and `doctor` reject a configuration
-file with group or world access; install configuration and private-key files as
-mode `0600`.
+directly. Review only structured, non-sensitive JSON logs/metrics: active
+connections, handshake result, decrypt failures, destination-connect failures,
+bytes, and close reason. Never enable payload logging for debugging. Both
+`serve` and `doctor` reject a configuration file with group or world access;
+install configuration and private-key files as mode `0600`.
 
 For an unknown-client, wrong-server-key, malformed-frame, or AEAD error, expect
 a closed connection and no plaintext forwarding. Investigate the peer identity
