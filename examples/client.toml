@@ -1,6 +1,9 @@
 # Template only. Replace every REPLACE_WITH_* value before deployment.
-# The client listener is intentionally loopback-only; Codex points its custom
-# Responses provider at http://127.0.0.1:18787/v1.
+# The client listener is intentionally loopback-only. Applications connect to
+# this address using whatever protocol the fixed downstream service expects.
+# In the original Codex deployment, Codex points its custom Responses provider
+# at http://127.0.0.1:18787/v1. If the downstream service is an HTTP forward
+# proxy, applications may instead use http://127.0.0.1:18787 as their proxy.
 
 [listen]
 address = "127.0.0.1:18787"
@@ -29,5 +32,5 @@ handshake_seconds = 10
 idle_seconds = 600
 
 [limits]
-# Bound locally accepted Codex connections before they consume outbound work.
+# Bound locally accepted application connections before they consume outbound work.
 max_connections = 32
