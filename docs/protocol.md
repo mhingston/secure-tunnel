@@ -3,8 +3,12 @@
 ## Scope
 
 Version 1 carries one opaque, bidirectional TCP byte stream. It does not know
-about HTTP, Codex, Responses, SSE, WebSockets, OAuth, or destinations selected
-by a client.
+about HTTP, Codex, Responses, SSE, WebSockets, OAuth, SOCKS, forward-proxy
+semantics, or destinations selected by a client.
+
+Application protocols are deliberately outside the encrypted transport. The
+server terminates the Noise channel and connects the recovered byte stream to
+one operator-configured loopback TCP service.
 
 ## Handshake
 
@@ -36,6 +40,23 @@ trust.
 On success, the Noise cipher states supply independent directional AEAD keys
 and monotonically advancing nonces. Failed authentication is terminal; there
 is no downgrade, retry with another server key, or unauthenticated plaintext.
+
+## Destination model
+
+The encrypted protocol contains no destination-routing message. The client
+cannot request a hostname, IP address, or port. After a successful Noise
+handshake, ingress connects solely to the one loopback `destination.address`
+provided by server configuration.
+
+This is a protocol invariant, not merely a deployment convention. Generic
+forward-proxy use cases are composed by making that fixed loopback service a
+separately managed HTTP or SOCKS proxy. Any `CONNECT`, SOCKS address, DNS name,
+or other routing information remains part of the opaque application byte
+stream and is interpreted only by the downstream proxy.
+
+Adding a client-supplied destination to the tunnel protocol would change the
+security boundary and requires a new protocol design and threat model; it must
+not be introduced as a convenience change for proxy composition.
 
 ## Transport records
 
@@ -75,10 +96,13 @@ version, not an implicit compatibility change.
 ## Compatibility and versioning
 
 The protocol version describes this encrypted transport only, not a Codex
-release. Unknown major versions fail with a diagnostic. Minor versions may add
-only explicitly negotiated compatible behavior. Transport configuration has no
-host/port requested by the client: ingress connects solely to its configured
-loopback compatibility-service address.
+release or downstream service. Unknown major versions fail with a diagnostic.
+Minor versions may add only explicitly negotiated compatible behavior.
+Transport configuration has no host/port requested by the client: ingress
+connects solely to its configured loopback service.
+
+The `CDXT` preface and existing crate/binary names are historical identifiers;
+they do not imply that Version 1 payload semantics are Codex-specific.
 
 ## Key rotation rule
 
