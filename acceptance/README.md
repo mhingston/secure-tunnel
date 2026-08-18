@@ -18,7 +18,7 @@ captures came from the stated systems and were access-controlled after capture.
 
 | ID | Requirement | Evidence | State in this repository |
 | --- | --- | --- | --- |
-| LIVE-1 | Existing compatibility service works directly and through the tunnel without semantic changes | `live-codex.json` and hashed captures | Unmet: needs live subscription/deployment. |
+| LIVE-1 | Existing compatibility service works directly and through the tunnel without semantic changes | `live-application.json` and hashed captures | Unmet: needs live subscription/deployment. |
 | PERF-1 | Same-hardware/route benchmark meets §39 latency, throughput, and memory gates | Harness `benchmark.json` plus RSS/CPU attestation | Unmet: needs production hardware and live route. |
 | MAC-1 | Both deployable components are signed universal macOS binaries that run without source/compiler/runtime | `artifacts.json`, artifacts, command captures | Unmet: needs a macOS signing/release host. |
 
@@ -26,12 +26,12 @@ captures came from the stated systems and were access-controlled after capture.
 
 ```text
 RELEASE_ID/
-  live-codex.json
+  live-application.json
   benchmark.json
   benchmark-attestation.json
   artifacts.json
   captures/…
-  artifacts/codex-tunnel-server
+  artifacts/secure-tunnel-server
   artifacts/network-sync-agent
 ```
 
@@ -39,9 +39,9 @@ All `path` fields below are relative to this directory, name a regular file,
 and are paired with a lower-case 64-hex `sha256`. Hash each capture after it is
 complete with `shasum -a 256 FILE` (macOS) or `sha256sum FILE` (Linux).
 
-## LIVE-1: direct-versus-tunnel Codex capture
+## LIVE-1: direct-versus-tunnel application capture
 
-On the restricted Mac, use the same Codex release, account/workspace,
+On the restricted Mac, use the same application release, account/workspace,
 compatibility-service deployment, request corpus, and client settings twice:
 
 1. Directly against the compatibility service.
@@ -51,7 +51,7 @@ For every passed path, save a redacted capture that records command/version,
 endpoint mode, request identifier, start/end time, and assertions. Never save
 authorization headers, OAuth state, prompts, source code, or model output.
 
-`live-codex.json` is version 1 and contains:
+`live-application.json` is version 1 and contains:
 
 ```json
 {
@@ -88,7 +88,7 @@ same two passed captures for `websocket`. If they are disabled, set it to
 
 First produce `benchmark.json` with the release candidate harness, exactly as
 described in [`docs/benchmarking.md`](../docs/benchmarking.md). It must be the
-fresh output of `codex-tunnel-bench run`, not handwritten JSON. The validator
+fresh output of `secure-tunnel-bench run`, not handwritten JSON. The validator
 requires its schema version 1, 20 or more samples per path, a 67,108,864-byte
 stream in both directions, a 9-byte promptly-flushed write, all three true
 gates, measured RSS, and arithmetic matching the reported values.
@@ -99,7 +99,7 @@ Create `benchmark-attestation.json`:
 ```json
 {
   "schema_version": 1,
-  "release_id": "same release_id as live-codex.json",
+  "release_id": "same release_id as live-application.json",
   "benchmark_sha256": "SHA-256 of benchmark.json",
   "route": "private-lan",
   "hardware": {
@@ -128,9 +128,9 @@ the final universal files, and copy the final binaries—not intermediate slices
 into `artifacts/`. Capture and hash output of these commands for both roles:
 
 ```sh
-lipo -archs artifacts/codex-tunnel-server
-codesign --verify --strict --verbose=4 artifacts/codex-tunnel-server
-./artifacts/codex-tunnel-server --help
+lipo -archs artifacts/secure-tunnel-server
+codesign --verify --strict --verbose=4 artifacts/secure-tunnel-server
+./artifacts/secure-tunnel-server --help
 ```
 
 Repeat for the client artifact (named `network-sync-agent` on the restricted
@@ -144,12 +144,12 @@ that output with the release notes.
 ```json
 {
   "schema_version": 1,
-  "release_id": "same release_id as live-codex.json",
+  "release_id": "same release_id as live-application.json",
   "build_host": "macOS version and Xcode CLT version",
   "artifacts": [
     {
       "role": "server",
-      "path": "artifacts/codex-tunnel-server",
+      "path": "artifacts/secure-tunnel-server",
       "sha256": "published SHA-256 of final binary",
       "architectures": ["arm64", "x86_64"],
       "codesign_capture": {"path": "captures/server-codesign.txt", "sha256": "…"},

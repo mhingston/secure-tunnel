@@ -1,6 +1,8 @@
 # Template only. Replace every REPLACE_WITH_* value before deployment.
-# The client listener is intentionally loopback-only; Codex points its custom
-# Responses provider at http://127.0.0.1:18787/v1.
+# The client listener is intentionally loopback-only. Applications connect to
+# this address using whatever protocol the fixed downstream service expects.
+# If the downstream service is an HTTP forward proxy, applications may use
+# http://127.0.0.1:18787 as their proxy endpoint.
 
 [listen]
 address = "127.0.0.1:18787"
@@ -12,7 +14,7 @@ address = "REPLACE_WITH_REMOTE_HOST:8443"
 # peer-identity boundary even when an enterprise CA can intercept this TLS.
 [outer_tls]
 enabled = false
-# server_name = "codex-tunnel.internal"
+# server_name = "tunnel.internal"
 # Test harnesses only: append an interception CA without disabling system-root validation.
 # additional_ca_file = "/protected/test-ca.pem"
 
@@ -29,5 +31,5 @@ handshake_seconds = 10
 idle_seconds = 600
 
 [limits]
-# Bound locally accepted Codex connections before they consume outbound work.
+# Bound locally accepted application connections before they consume outbound work.
 max_connections = 32

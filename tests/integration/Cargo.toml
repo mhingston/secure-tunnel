@@ -1,5 +1,5 @@
 [package]
-name = "codex-tunnel-integration"
+name = "secure-tunnel-integration"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -12,7 +12,7 @@ path = "security_integration.rs"
 
 [dev-dependencies]
 base64.workspace = true
-codex-tunnel = { path = "../../crates/codex-tunnel" }
+secure-tunnel = { path = "../../crates/secure-tunnel" }
 rcgen = "=0.12.1"
 rustls.workspace = true
 rustls-pemfile.workspace = true

@@ -2,5 +2,5 @@ POST /v1/responses HTTP/1.1
 Host: compat.local
 X-Compatibility-Fixture: reuse-second-v1
 
-{"model":"gpt-5-codex-mini","input":"second request on one TCP connection"}
+{"model":"gpt-5-application-mini","input":"second request on one TCP connection"}
 

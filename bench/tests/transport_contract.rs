@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use codex_tunnel_bench::{
+use secure_tunnel_bench::{
     BENCHMARK_BYTES, SMALL_FLUSH_REQUEST_BYTES, first_byte_sample, serve, stream_sample,
 };
 use tokio::{net::TcpListener, time::timeout};

@@ -264,89 +264,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "codex-tunnel"
-version = "0.1.0"
-dependencies = [
- "snow",
- "thiserror",
-]
-
-[[package]]
-name = "codex-tunnel-bench"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "codex-tunnel-client"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "base64",
- "clap",
- "codex-tunnel",
- "rustls",
- "rustls-native-certs",
- "rustls-pemfile",
- "serde",
- "sha2",
- "socket2",
- "tokio",
- "tokio-rustls",
- "toml",
- "tracing",
- "tracing-subscriber",
- "zeroize",
-]
-
-[[package]]
-name = "codex-tunnel-compatibility"
-version = "0.1.0"
-dependencies = [
- "base64",
- "codex-tunnel",
-]
-
-[[package]]
-name = "codex-tunnel-integration"
-version = "0.1.0"
-dependencies = [
- "base64",
- "codex-tunnel",
- "rcgen",
- "rustls",
- "rustls-pemfile",
- "tokio",
- "tokio-rustls",
-]
-
-[[package]]
-name = "codex-tunnel-server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "base64",
- "clap",
- "codex-tunnel",
- "rustls",
- "rustls-pemfile",
- "serde",
- "sha2",
- "socket2",
- "tokio",
- "tokio-rustls",
- "toml",
- "tracing",
- "tracing-subscriber",
- "zeroize",
-]
-
-[[package]]
 name = "colorchoice"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -914,6 +831,89 @@ name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
+
+[[package]]
+name = "secure-tunnel"
+version = "0.1.0"
+dependencies = [
+ "snow",
+ "thiserror",
+]
+
+[[package]]
+name = "secure-tunnel-bench"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "secure-tunnel-client"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64",
+ "clap",
+ "rustls",
+ "rustls-native-certs",
+ "rustls-pemfile",
+ "secure-tunnel",
+ "serde",
+ "sha2",
+ "socket2",
+ "tokio",
+ "tokio-rustls",
+ "toml",
+ "tracing",
+ "tracing-subscriber",
+ "zeroize",
+]
+
+[[package]]
+name = "secure-tunnel-compatibility"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "secure-tunnel",
+]
+
+[[package]]
+name = "secure-tunnel-integration"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "rcgen",
+ "rustls",
+ "rustls-pemfile",
+ "secure-tunnel",
+ "tokio",
+ "tokio-rustls",
+]
+
+[[package]]
+name = "secure-tunnel-server"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "base64",
+ "clap",
+ "rustls",
+ "rustls-pemfile",
+ "secure-tunnel",
+ "serde",
+ "sha2",
+ "socket2",
+ "tokio",
+ "tokio-rustls",
+ "toml",
+ "tracing",
+ "tracing-subscriber",
+ "zeroize",
+]
 
 [[package]]
 name = "security-framework"

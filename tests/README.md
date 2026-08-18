@@ -4,12 +4,12 @@
 
 `integration/security_integration.rs` is the transport security-contract suite.
 It starts the released tunnel binaries against loopback-only fixture services;
-it does not need the pre-existing Codex compatibility service or ChatGPT
+it does not need the pre-existing application compatibility service or ChatGPT
 credentials. Run it with:
 
 ```sh
-cargo build -p codex-tunnel-client -p codex-tunnel-server
-cargo test -p codex-tunnel-integration
+cargo build -p secure-tunnel-client -p secure-tunnel-server
+cargo test -p secure-tunnel-integration
 ```
 
 `compatibility/` is a separate local byte-transparency contract. Its fixture
@@ -43,11 +43,11 @@ between them. It covers:
 Run it with:
 
 ```sh
-cargo build -p codex-tunnel-client -p codex-tunnel-server
-cargo test -p codex-tunnel-compatibility --test compatibility
+cargo build -p secure-tunnel-client -p secure-tunnel-server
+cargo test -p secure-tunnel-compatibility --test compatibility
 ```
 
-These are local deterministic transport tests, not evidence that a stock Codex
+These are local deterministic transport tests, not evidence that a stock application
 CLI works against ChatGPT. They deliberately contain no credentials, live
 OAuth, or real compatibility-service behaviour. Production acceptance still
 requires the already-authorised compatibility-service E2E scenarios to run

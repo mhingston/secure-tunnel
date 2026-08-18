@@ -50,14 +50,14 @@ validate_manifest() {
     NF != 2 { exit 1 }
     length($1) != 64 || $1 !~ /^[0123456789abcdefABCDEF]+$/ { exit 1 }
     $2 == "network-sync-agent" { client++; next }
-    $2 == "codex-tunnel-server" { server++; next }
+    $2 == "secure-tunnel-server" { server++; next }
     { exit 1 }
     END { exit !(client == 1 && server == 1 && NR == 2) }
   ' "$manifest"
 }
 validate_manifest || fail 'SHA256SUMS must contain exactly the two expected artifact digests'
 
-for artifact in network-sync-agent codex-tunnel-server; do
+for artifact in network-sync-agent secure-tunnel-server; do
   [ -f "$artifact_dir/$artifact" ] && [ ! -L "$artifact_dir/$artifact" ] ||
     fail "artifact must be a regular non-symlink file: $artifact"
 done
@@ -76,5 +76,5 @@ verify_identity() {
   fi
 }
 verify_identity "$artifact_dir/network-sync-agent"
-verify_identity "$artifact_dir/codex-tunnel-server"
+verify_identity "$artifact_dir/secure-tunnel-server"
 echo "ok: verified signatures, universal slices, and SHA-256 manifest in $artifact_dir"

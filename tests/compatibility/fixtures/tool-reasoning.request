@@ -3,5 +3,5 @@ Host: compat.local
 Content-Type: application/json
 X-Compatibility-Fixture: tool-reasoning-v1
 
-{"model":"gpt-5-codex","reasoning":{"effort":"high"},"tools":[{"type":"function","name":"read_repo"}],"input":[{"type":"function_call_output","call_id":"call_fixture","output":"opaque tool result bytes"}]}
+{"model":"gpt-5-application","reasoning":{"effort":"high"},"tools":[{"type":"function","name":"read_repo"}],"input":[{"type":"function_call_output","call_id":"call_fixture","output":"opaque tool result bytes"}]}
 

@@ -47,7 +47,7 @@ output_parent=$(CDPATH= cd -- "$output_parent" && pwd -P)
 output_dir="$output_parent/$output_name"
 
 repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
-stage_root=$(mktemp -d "$output_parent/.codex-tunnel-release.XXXXXX")
+stage_root=$(mktemp -d "$output_parent/.secure-tunnel-release.XXXXXX")
 trap 'rm -rf "$stage_root"' EXIT HUP INT TERM
 stage_artifacts="$stage_root/artifacts"
 mkdir "$stage_artifacts"
@@ -55,7 +55,7 @@ mkdir "$stage_artifacts"
 build_target() {
   target=$1
   CARGO_TARGET_DIR="$stage_root/target" cargo build --locked --release --target "$target" \
-    -p codex-tunnel-client -p codex-tunnel-server \
+    -p secure-tunnel-client -p secure-tunnel-server \
     --manifest-path "$repo_root/Cargo.toml"
 }
 
@@ -77,13 +77,13 @@ combine() {
 }
 
 # The client artifact deliberately uses the inconspicuous operational name
-# required for the restricted Mac; its Rust package binary remains codex-tunnel.
-combine codex-tunnel network-sync-agent
-combine codex-tunnel-server codex-tunnel-server
+# required for the restricted Mac; its Rust package binary remains secure-tunnel.
+combine secure-tunnel network-sync-agent
+combine secure-tunnel-server secure-tunnel-server
 
 (
   cd "$stage_artifacts"
-  shasum -a 256 network-sync-agent codex-tunnel-server >SHA256SUMS
+  shasum -a 256 network-sync-agent secure-tunnel-server >SHA256SUMS
 )
 [ -s "$stage_artifacts/SHA256SUMS" ] || fail 'failed to create SHA256SUMS'
 

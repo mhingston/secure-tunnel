@@ -12,11 +12,11 @@ use std::{
 use anyhow::{Context, Result, bail};
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::{Parser, Subcommand};
-use codex_tunnel::{
+use rustls::{ClientConfig as RustlsClientConfig, RootCertStore, pki_types::ServerName};
+use secure_tunnel::{
     ClientHandshake, Preface, TransportReceiver, TransportSender, generate_keypair,
 };
-use codex_tunnel_client::config::ClientConfig;
-use rustls::{ClientConfig as RustlsClientConfig, RootCertStore, pki_types::ServerName};
+use secure_tunnel_client::config::ClientConfig;
 use sha2::{Digest, Sha256};
 use socket2::SockRef;
 use tokio::{
@@ -31,7 +31,7 @@ use tracing::{info, warn};
 use zeroize::Zeroizing;
 
 #[derive(Parser)]
-#[command(about = "Loopback client for the Codex Secure Tunnel")]
+#[command(about = "Loopback client for the Secure Tunnel")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -302,7 +302,7 @@ async fn complete_noise_handshake<S>(
     private: [u8; 32],
     server: [u8; 32],
     handshake_timeout: Duration,
-) -> Result<codex_tunnel::TransportSession>
+) -> Result<secure_tunnel::TransportSession>
 where
     S: AsyncRead + AsyncWrite + Unpin,
 {
@@ -398,7 +398,7 @@ async fn relay(
     result
 }
 
-fn tls_connector(config: &codex_tunnel_client::config::OuterTlsConfig) -> Result<TlsConnector> {
+fn tls_connector(config: &secure_tunnel_client::config::OuterTlsConfig) -> Result<TlsConnector> {
     let native = rustls_native_certs::load_native_certs();
     if !native.errors.is_empty() {
         bail!(
@@ -441,7 +441,7 @@ fn tls_connector(config: &codex_tunnel_client::config::OuterTlsConfig) -> Result
 }
 
 fn tls_server_name(
-    config: &codex_tunnel_client::config::OuterTlsConfig,
+    config: &secure_tunnel_client::config::OuterTlsConfig,
 ) -> Result<ServerName<'static>> {
     let server_name = config
         .server_name
@@ -459,7 +459,7 @@ async fn copy_encrypt<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     telemetry: Arc<ConnectionTelemetry>,
     activity: mpsc::Sender<()>,
 ) -> Result<()> {
-    let mut buffer = [0u8; codex_tunnel::MAX_PLAINTEXT_RECORD];
+    let mut buffer = [0u8; secure_tunnel::MAX_PLAINTEXT_RECORD];
     loop {
         let read_bytes = read.read(&mut buffer).await?;
         if read_bytes == 0 {
@@ -509,7 +509,7 @@ async fn copy_decrypt<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
 }
 
 async fn read_handshake_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Vec<u8>> {
-    read_length_framed(reader, 2, codex_tunnel::MAX_HANDSHAKE_MESSAGE).await
+    read_length_framed(reader, 2, secure_tunnel::MAX_HANDSHAKE_MESSAGE).await
 }
 async fn read_record_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Option<Vec<u8>>> {
     // Read one byte first so a clean EOF at the start of a record is distinct
@@ -520,7 +520,7 @@ async fn read_record_frame<R: AsyncRead + Unpin>(reader: &mut R) -> Result<Optio
     }
     reader.read_exact(&mut header[1..]).await?;
     let length = u32::from_be_bytes(header) as usize;
-    if length == 0 || length > codex_tunnel::MAX_CIPHERTEXT_RECORD {
+    if length == 0 || length > secure_tunnel::MAX_CIPHERTEXT_RECORD {
         bail!("invalid frame length {length}");
     }
     let mut frame = header.to_vec();
@@ -970,8 +970,10 @@ mod tests {
     fn configuration_permissions_reject_group_or_world_access() {
         use std::os::unix::fs::PermissionsExt;
 
-        let path =
-            std::env::temp_dir().join(format!("codex-tunnel-client-config-{}", std::process::id()));
+        let path = std::env::temp_dir().join(format!(
+            "secure-tunnel-client-config-{}",
+            std::process::id()
+        ));
         std::fs::write(&path, "[listen]\n").expect("write test config");
         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644))
             .expect("make unsafe");
@@ -988,7 +990,7 @@ mod tests {
         use std::os::unix::fs::PermissionsExt;
 
         let parent = std::env::temp_dir().join(format!(
-            "codex-tunnel-client-key-parent-{}",
+            "secure-tunnel-client-key-parent-{}",
             std::process::id()
         ));
         let _ = std::fs::remove_dir_all(&parent);
@@ -1016,7 +1018,7 @@ mod tests {
         use std::os::unix::{fs::PermissionsExt, fs::symlink};
 
         let directory = std::env::temp_dir().join(format!(
-            "codex-tunnel-client-config-link-{}",
+            "secure-tunnel-client-config-link-{}",
             std::process::id()
         ));
         let _ = std::fs::remove_dir_all(&directory);
@@ -1067,7 +1069,7 @@ mod tests {
                 .await
                 .expect("read handshake body");
             let mut responder =
-                codex_tunnel::ServerHandshake::new(server_private, [allowed_client])
+                secure_tunnel::ServerHandshake::new(server_private, [allowed_client])
                     .expect("responder");
             responder.accept_preface(&preface).expect("accept preface");
             let mut reply = responder.receive_client(&frame).expect("authorised client");
@@ -1110,7 +1112,7 @@ mod tests {
                 .await
                 .expect("read handshake body");
             let mut responder =
-                codex_tunnel::ServerHandshake::new(server_private, [allowed_client])
+                secure_tunnel::ServerHandshake::new(server_private, [allowed_client])
                     .expect("responder");
             responder.accept_preface(&preface).expect("accept preface");
             if let Ok(mut reply) = responder.receive_client(&frame) {

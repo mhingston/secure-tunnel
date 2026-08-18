@@ -3,5 +3,5 @@ Host: compat.local
 Content-Type: application/json
 X-Compatibility-Fixture: long-sse-v1
 
-{"model":"gpt-5-codex","stream":true,"input":"long running fixture"}
+{"model":"gpt-5-application","stream":true,"input":"long running fixture"}
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Validate a completed codex-secure-tunnel installation before launchd loads it.
+# Validate a completed secure-tunnel installation before launchd loads it.
 # This intentionally accepts the documented TOML subset only; it is a deployment
 # guard, not a general TOML parser.
 set -eu

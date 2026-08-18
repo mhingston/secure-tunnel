@@ -7,7 +7,7 @@ ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 BUILD="$ROOT/release/build-macos-universal.sh"
 VERIFY="$ROOT/release/verify-artifact.sh"
 INSTALL="$ROOT/release/install-atomic.sh"
-TMP=$(mktemp -d "${TMPDIR:-/tmp}/codex-tunnel-release-test.XXXXXX")
+TMP=$(mktemp -d "${TMPDIR:-/tmp}/secure-tunnel-release-test.XXXXXX")
 trap 'rm -rf "$TMP"' EXIT HUP INT TERM
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
@@ -37,8 +37,8 @@ while [ "$#" -gt 0 ]; do
 done
 [ -n "$target" ] || exit 64
 mkdir -p "$CARGO_TARGET_DIR/$target/release"
-printf 'client-%s\n' "$target" >"$CARGO_TARGET_DIR/$target/release/codex-tunnel"
-printf 'server-%s\n' "$target" >"$CARGO_TARGET_DIR/$target/release/codex-tunnel-server"
+printf 'client-%s\n' "$target" >"$CARGO_TARGET_DIR/$target/release/secure-tunnel"
+printf 'server-%s\n' "$target" >"$CARGO_TARGET_DIR/$target/release/secure-tunnel-server"
 EOF
 cat >"$MOCK/lipo" <<'EOF'
 #!/bin/sh
@@ -90,7 +90,7 @@ chmod 755 "$MOCK"/*
 ARTIFACTS="$TMP/artifacts"
 PATH="$MOCK:$PATH" CARGO_TARGET_DIR="$TMP/cargo-target" "$BUILD" --output-dir "$ARTIFACTS" --sign-identity 'Developer ID Test'
 [ -f "$ARTIFACTS/network-sync-agent" ] || fail 'client artifact missing'
-[ -f "$ARTIFACTS/codex-tunnel-server" ] || fail 'server artifact missing'
+[ -f "$ARTIFACTS/secure-tunnel-server" ] || fail 'server artifact missing'
 [ -f "$ARTIFACTS/SHA256SUMS" ] || fail 'digest manifest missing'
 PATH="$MOCK:$PATH" "$VERIFY" --artifact-dir "$ARTIFACTS" --require-identity 'Developer ID Test'
 

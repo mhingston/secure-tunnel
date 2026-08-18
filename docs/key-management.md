@@ -11,8 +11,8 @@ fingerprints out of band; do not learn them from the first tunnel connection.
 Generate keys through the binaries rather than low-level crypto tooling:
 
 ```sh
-codex-tunnel keygen --private-key-file ~/.config/codex-tunnel/client.key
-codex-tunnel-server keygen --private-key-file /var/lib/codex-tunnel/server.key
+secure-tunnel keygen --private-key-file ~/.config/secure-tunnel/client.key
+secure-tunnel-server keygen --private-key-file /var/lib/secure-tunnel/server.key
 ```
 
 Use a dedicated mode-`0700` parent directory. Key generation creates one
