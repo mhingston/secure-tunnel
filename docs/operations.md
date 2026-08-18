@@ -7,11 +7,10 @@ the client as a per-user LaunchAgent and exposes only `127.0.0.1:18787`. The
 remote Mac runs ingress as a LaunchDaemon and forwards only to one configured
 loopback TCP service.
 
-The current Codex deployment uses the compatibility service at
-`127.0.0.1:8787`, but that service is not part of the tunnel protocol. A
-different deployment may point the same fixed destination at another trusted
-loopback service, such as a separately managed HTTP or SOCKS forward proxy.
-See [composition.md](composition.md).
+The downstream service is not part of the tunnel protocol. A deployment may
+point the fixed destination at an application service or at another trusted
+loopback service such as a separately managed HTTP or SOCKS forward proxy. See
+[composition.md](composition.md).
 
 Use [client.toml](../examples/client.toml) and
 [server.toml](../examples/server.toml) as templates. They intentionally contain
@@ -27,11 +26,11 @@ The ingress `destination.address` must remain a single loopback address. The
 server does not accept a host or port selected by the client and must not be
 extended into a general-purpose forward proxy.
 
-For the original Codex compatibility service:
+For a fixed application service:
 
 ```toml
 [destination]
-address = "127.0.0.1:8787"
+address = "127.0.0.1:9000"
 ```
 
 For a dedicated forward proxy listening locally on the ingress host:
